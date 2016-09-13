@@ -37,13 +37,14 @@ class CalParser
 
             $event->summary = $summary;
             $event->location = $location;
+            $desc = str_replace("\\n", PHP_EOL, $event->description);
 
             $vEvent = new \Eluceo\iCal\Component\Event();
             $vEvent->setDtStart(new \DateTime($event->dtstart))
                 ->setDtEnd(new \DateTime($event->dtend))
                 ->setSummary($summary)
                 ->setLocation($location)
-                ->setDescription($event->description);
+                ->setDescription($desc);
 
             $newCalendar->addComponent($vEvent);
         }
