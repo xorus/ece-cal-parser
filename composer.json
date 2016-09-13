@@ -1,0 +1,18 @@
+{
+    "name": "xorus/ece-ical-parser",
+    "require": {
+        "johngrogg/ics-parser": "^2.0",
+        "eluceo/ical": "^0.10.1"
+    },
+    "authors": [
+        {
+            "name": "Josua Gonzalez",
+            "email": "jdpepi@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Xorus": "src/"
+        }
+    }
+}
