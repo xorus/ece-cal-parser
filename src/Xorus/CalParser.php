@@ -21,6 +21,7 @@ class CalParser
     private function cleanifyString($string)
     {
         $string = str_replace('&#039;', '\'', $string);
+        $string = str_replace('\,', ',', $string);
         $string = str_replace('\\n', PHP_EOL, $string);
 
         return $string;
