@@ -9,12 +9,21 @@ class CalParser
 {
     private $source = '';
 
-    public function __construct($sourceURI) {
+    public function __construct($sourceURI)
+    {
         if (preg_match('/https?:\/\/ical\.campuseiffel\.fr\/newical\/ical-[^-]+-[^-]+.ics/', $sourceURI)) {
             $this->source = $sourceURI;
         } else {
             throw new \Exception('Cette source n\'est pas autorisée');
         }
+    }
+
+    private function cleanifyString($string)
+    {
+        $string = str_replace('&#039;', '\'', $string);
+        $string = str_replace('\\n', PHP_EOL, $string);
+
+        return $string;
     }
 
     public function parseCalendar()
@@ -35,9 +44,9 @@ class CalParser
                 $location = $matches[1];
             }
 
-            $event->summary = $summary;
-            $event->location = $location;
-            $desc = str_replace("\\n", PHP_EOL, $event->description);
+            $summary = $this->cleanifyString($summary);
+            $location = $this->cleanifyString($location);
+            $desc = $this->cleanifyString($event->description);
 
             $vEvent = new \Eluceo\iCal\Component\Event();
             $vEvent->setDtStart(new \DateTime($event->dtstart))
