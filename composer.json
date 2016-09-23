@@ -2,7 +2,8 @@
     "name": "xorus/ece-ical-parser",
     "require": {
         "johngrogg/ics-parser": "^2.0",
-        "eluceo/ical": "^0.10.1"
+        "eluceo/ical": "^0.10.1",
+        "tedivm/stash": "^0.14.1"
     },
     "authors": [
         {

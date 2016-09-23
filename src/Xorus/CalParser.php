@@ -4,6 +4,8 @@ namespace Xorus;
 
 use Eluceo\iCal\Component\Calendar;
 use ICal\ICal;
+use Stash\Driver\FileSystem;
+use Stash\Pool;
 
 class CalParser
 {
@@ -27,9 +29,26 @@ class CalParser
         return $string;
     }
 
+    private function downloadCalendar()
+    {
+        $driver = new FileSystem([]);
+        $pool = new Pool($driver);
+        $item = $pool->getItem(md5($this->source));
+        $data = $item->get();
+
+        if ($item->isMiss()) {
+            $item->lock();
+            $data = file($this->source);
+            $item->expiresAfter(1300);
+            $pool->save($item->set($data));
+        }
+
+        return $data;
+    }
+
     public function parseCalendar()
     {
-        $calendar = new ICal($this->source);
+        $calendar = new ICal($this->downloadCalendar());
         $newCalendar = new Calendar('Planning Cours');
 
         /** @var \ICal\EventObject $event */
