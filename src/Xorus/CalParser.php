@@ -29,26 +29,9 @@ class CalParser
         return $string;
     }
 
-    private function downloadCalendar()
+    private function parseICal($data)
     {
-        $driver = new FileSystem([]);
-        $pool = new Pool($driver);
-        $item = $pool->getItem(md5($this->source));
-        $data = $item->get();
-
-        if ($item->isMiss()) {
-            $item->lock();
-            $data = file($this->source);
-            $item->expiresAfter(1300);
-            $pool->save($item->set($data));
-        }
-
-        return $data;
-    }
-
-    public function parseCalendar()
-    {
-        $calendar = new ICal($this->downloadCalendar());
+        $calendar = new ICal($data);
         $newCalendar = new Calendar('Planning Cours');
 
         /** @var \ICal\EventObject $event */
@@ -78,8 +61,26 @@ class CalParser
             $newCalendar->addComponent($vEvent);
         }
 
+        return $newCalendar->render();
+    }
+
+    public function parseCalendar()
+    {
+        $driver = new FileSystem([]);
+        $pool = new Pool($driver);
+        $item = $pool->getItem('parsed-' . md5($this->source));
+        $data = $item->get();
+
+        if ($item->isMiss()) {
+            $item->lock();
+            $sourceICalData = file($this->source);
+            $data = $this->parseICal($sourceICalData);
+            $item->expiresAfter(1300);
+            $pool->save($item->set($data));
+        }
+
         header('Content-Type: text/calendar; charset=utf-8');
         header('Content-Disposition: attachment; filename="cal.ics"');
-        echo $newCalendar->render();
+        echo $data;
     }
 }
