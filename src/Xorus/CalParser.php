@@ -53,10 +53,7 @@ class CalParser
 
             $vEvent = new \Eluceo\iCal\Component\Event();
 
-            if (strlen($event->dtstart) == 8) {
-                $vEvent->setUseTimezone(true);
-            }
-            if (strlen($event->dtend) == 8) {
+            if (strlen($event->dtstart) == 8 || strlen($event->dtend) == 8) {
                 $vEvent->setUseTimezone(true);
             }
 
