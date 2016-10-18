@@ -52,6 +52,14 @@ class CalParser
             $desc = $this->cleanifyString($event->description);
 
             $vEvent = new \Eluceo\iCal\Component\Event();
+
+            if (strlen($event->dtstart) == 8) {
+                $vEvent->setUseTimezone(true);
+            }
+            if (strlen($event->dtend) == 8) {
+                $vEvent->setUseTimezone(true);
+            }
+
             $vEvent->setDtStart(new \DateTime($event->dtstart))
                 ->setDtEnd(new \DateTime($event->dtend))
                 ->setSummary($summary)
